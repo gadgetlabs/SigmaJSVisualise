@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sigma.js Hello World</title>
+	<link rel="stylesheet" type="text/css" href="network3.css">
+ 
+ 
+     <style type="text/css">
+ 
+        /* Set a height on the div or it will have zero height */
+        .graph {
+            height: 200px;
+        }
+ 
+    </style>
+ 
+    <script src="jquery-1.6.4.min.js"></script>
+    <script src="sigma.min.js"></script>
+    <script type="text/javascript">
+
+	$(document).ready(function(){
+
+		var cypherQuery = {"query" : "MATCH (n:`email`) RETURN n.address LIMIT 5", "params" : {}};
+
+		function drawGraph()
+		{
+ // Use jquery to retrieve the div with id 'sig'
+            var domElement = $('#sig')[0];
+ 
+            // Let sigma.js populate the div
+            var sigInst = sigma.init(domElement);
+ 
+            // Use curved edges and make the nodes a bit bigger
+            sigInst.drawingProperties({
+                defaultEdgeType:'curve'
+            }).graphProperties({
+                        minNodeSize:1,
+                        maxNodeSize:5
+                    });
+ 
+            // Add a simple graph
+            // NOTE! addEdge needs to take three parameters,
+            // the first one being the name of the edge itself
+            sigInst.addNode('hello', {
+                label:'Hello',
+                x:Math.random(),
+                y:Math.random()
+            }).addNode('world', {
+                        label:'World!',
+                        x:Math.random(),
+                        y:Math.random()
+                    }).addEdge('helloworld', 'hello', 'world').draw();
+		}
+
+
+		// Get a list of email addresses
+		request = $.ajax({
+				type : "POST",
+				url: "http://localhost:7474/db/data/cypher",
+				contentType: "application/json",
+				accepts : "application/json; charset=UTF-8",
+				data : JSON.stringify(cypherQuery)
+		});
+		
+		// populate the list
+		request.done(function(response, textStatus, jqXHR){
+			var listHtml = "";
+			$.each(response.data, function(index, value){
+				
+				// Use the jquery trim function to trim whitespace				
+				var email = $.trim(value[0]);
+				listHtml += "<li><a href=\"#\">" + email + "</a></li>";
+			});
+			
+			$("#longlist").append(listHtml);
+			
+			$("#longlist li").click(function() {
+				drawGraph()
+				
+				var x = $(this);
+				
+				//alert("Clicked list." + $(this).contents().find("a").text());
+			});
+			
+		});
+		
+
+		
+
+		
+	});
+</script>
+</head>
+<body>
+
+<!--This is where to select the stuff we want from-->
+<div id="selectorlist">
+	<ul id="longlist"></ul>
+</div>
+
+<!--This is where we visualise the graph-->
+<div class="graph" id="sig"></div>
+
+
+</body>
+</html>

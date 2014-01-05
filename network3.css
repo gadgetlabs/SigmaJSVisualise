@@ -1,0 +1,14 @@
+#selectorlist { width:320px; font-family:Georgia, Times, serif; font-size:15px; }
+#selectorlist ul { list-style: none; }
+#selectorlist ul li { }
+#selectorlist ul li a { display:block; text-decoration:none; color:#000000; background-color:#FFFFFF; line-height:30px;
+  border-bottom-style:solid; border-bottom-width:1px; border-bottom-color:#CCCCCC; padding-left:10px; cursor:pointer; }
+#selectorlist ul li a:hover { font-weight:bold; background-repeat:repeat-x; }
+#selectorlist ul li a strong { margin-right:10px; }
+
+body
+{
+background-color:#ffffff;
+}
+
+#graph {background-color:#ffffff;}
